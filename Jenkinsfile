@@ -15,9 +15,9 @@ pipeline {
         }
         stage ('Run app') {
             steps {
-                sh "docker stop vat-calc || true"
-                sh "docker rm vat-calc || true"
-                sh "docker run --name vat-calc -d -p 3005:80 ${imageName}"
+                docker stop vat-calc || true
+                docker rm vat-calc || true
+                docker run --name vat-calc -d -p 3005:80 ${imageName}
             }
         }
     }
