@@ -1,6 +1,6 @@
 pipeline {
     environment {
-        imageName = "vat-calculator"
+        imageName = "vat-calculator:${env.BUILD_ID}"
         dockerImage = ""
     }
     agent any
@@ -9,7 +9,7 @@ pipeline {
         stage ('Build Docker Image') {
             steps {
                 script {
-                    dockerImage = docker.build(imageName:${env.BUILD_ID})
+                    dockerImage = docker.build(imageName)
                 }
             }
         }
