@@ -13,5 +13,12 @@ pipeline {
                 }
             }
         }
+        stage ('Run app') {
+            steps {
+                sh "docker kill vat-calc"
+                sh "docker run -d -p 3005:80 --name vat-calc dockerImage"
+            }
+        }
+
     }
 }
