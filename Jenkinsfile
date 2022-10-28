@@ -19,6 +19,5 @@ pipeline {
                 sh "docker run -d -p 3005:80 --name vat-calc dockerImage"
             }
         }
-
     }
 }
