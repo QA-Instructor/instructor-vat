@@ -13,5 +13,14 @@ pipeline {
                 }
             }
         }
+        stage ('Run calculator') {
+            steps {
+                script {
+                    docker kill vat-calc
+                    docker run --name vat-calc -p 3005:80 -d dockerImage
+                }
+            }
+        }
+
     }
 }
