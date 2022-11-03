@@ -1,24 +1,37 @@
-pipeline {
+pipeline{
     environment {
-        imageName = "vat-calculator:${env.BUILD_ID}"
+        registry = "paulmercer/vatcal"
+        registryCredentials = "dockerhub_id"
         dockerImage = ""
     }
-    agent any
 
-    stages {
-        stage ('Build Docker Image') {
-            steps {
-                script {
-                    dockerImage = docker.build(imageName)
+    agent any   
+        stages {
+            stage ('Build Docker Image'){
+                steps{
+                    script {
+                        dockerImage = docker.build(registry)
+                    }
                 }
             }
-        }
-        stage ('Run app') {
-            steps {
-                docker stop vat-calc || true
-                docker rm vat-calc || true
-                docker run --name vat-calc -d -p 3005:80 ${imageName}
+
+            stage ("Push to Docker Hub"){
+                steps {
+                    script {
+                        docker.withRegistry('', registryCredentials) {
+                            dockerImage.push("${env.BUILD_NUMBER}")
+                            dockerImage.push("latest")                    
+                        }
+                    }
+                }
             }
-        }
-    }
+
+            stage ("Clean up"){
+                steps {
+                    script {
+                        sh 'docker image prune --all --force --filter "until=168h"'
+                           }
+                }
+            }            
+        }       
 }
